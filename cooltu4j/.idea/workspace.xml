@@ -6,32 +6,6 @@
   <component name="ChangeListManager">
     <list default="true" id="4f9795cc-313f-4e5f-b416-71270172c703" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/cooltu/lib4j/ls/Ls.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/cooltu/lib4j/ls/Ls1.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/cooltu/lib4j/ls/Ts.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/cooltu/lib4j/ls/getter/EachGetter.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/cooltu/lib4j/ls/eachgetter/EachGetter.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/cooltu/lib4j/ls/getter/EachGetter4Array.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/cooltu/lib4j/ls/getter/EachGetter4ArrayBool.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/cooltu/lib4j/ls/getter/EachGetter4ArrayByte.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/cooltu/lib4j/ls/getter/EachGetter4ArrayChar.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/cooltu/lib4j/ls/getter/EachGetter4ArrayDouble.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/cooltu/lib4j/ls/getter/EachGetter4ArrayFloat.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/cooltu/lib4j/ls/getter/EachGetter4ArrayInt.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/cooltu/lib4j/ls/getter/EachGetter4ArrayLong.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/cooltu/lib4j/ls/getter/EachGetter4ArrayShort.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/cooltu/lib4j/ls/getter/EachGetter4List.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/cooltu/lib4j/ls/same/Same.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/cooltu/lib4j/ls/same/SameForSymbol.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/com/codingtu/cooltu4j/Test.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/com/codingtu/cooltu4j/Test.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cooltu/lib4j/ls/Ls$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cooltu/lib4j/ls/Ls$2.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cooltu/lib4j/ls/Ls$3.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cooltu/lib4j/ls/Ls$4.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cooltu/lib4j/ls/Ls.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cooltu/lib4j/ls/Ls1$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cooltu/lib4j/ls/Ls1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cooltu/lib4j/ls/getter/EachGetter.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cooltu/lib4j/ls/same/Same.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/test-classes/com/codingtu/cooltu4j/Test.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/test-classes/com/codingtu/cooltu4j/Test.class" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -89,17 +63,17 @@
   "keyToString": {
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
-    "last_opened_file_path": "D:/code_cloud/cooltu4j/cooltu4j/src/main/java/cooltu/lib4j",
+    "last_opened_file_path": "D:/code_cloud/cooltu4j/cooltu4j",
     "settings.editor.selected.configurable": "reference.settingsdialog.IDE.editor.colors.Language Defaults"
   }
 }]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="D:\code_cloud\cooltu4j\cooltu4j" />
       <recent name="D:\code_cloud\cooltu4j\cooltu4j\src\main\java\cooltu\lib4j" />
       <recent name="D:\code_cloud\cooltu4j\cooltu4j\src\main\java\cooltu\lib4j\tools" />
       <recent name="D:\code_cloud\cooltu4j\cooltu4j\src\main\java\cooltu\lib4j\data\bean" />
       <recent name="D:\code_cloud\cooltu4j\cooltu4j\src\main\java\cooltu\lib4j\ls" />
-      <recent name="D:\code_cloud\cooltu4j\cooltu4j\src\main\java\cooltu\lib4j\ls\each" />
     </key>
     <key name="CopyClassDialog.RECENTS_KEY">
       <recent name="cooltu.lib4j.ls" />
