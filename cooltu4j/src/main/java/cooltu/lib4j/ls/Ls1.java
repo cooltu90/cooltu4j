@@ -276,6 +276,42 @@ public class Ls1 {
         return get(new EachGetter4Array<>(ts), getter);
     }
 
+
+    public static <K, V> V get(Map<K, V> map, Getter<K, V> getter) {
+        Set<K> ks = map.keySet();
+        for (K k : ks) {
+            V v = map.get(k);
+            if (getter.get(k, v)) {
+                return v;
+            }
+        }
+        return null;
+    }
+
+    public static <T> T get(List<T> list, T tt, Same<T> same) {
+        return get(list, new Getter<Integer, T>() {
+            @Override
+            public boolean get(Integer key, T t) {
+                return same.same(t, tt);
+            }
+        });
+    }
+
+    public static <T> T get(T[] list, T tt, Same<T> same) {
+        return get(list, new Getter<Integer, T>() {
+            @Override
+            public boolean get(Integer key, T t) {
+                return same.same(t, tt);
+            }
+        });
+    }
+
+
+
+    private static Same<Symbol> getSymbolSame() {
+        return (id1, id2) -> id1.obtainSymbol().equals(id2.obtainSymbol());
+    }
+
     /**************************************************
      *
      * 分割线
@@ -311,16 +347,6 @@ public class Ls1 {
         return -1;
     }
 
-    public static <K, E> E get(Map<K, E> map, Getter<K, E> getter) {
-        Set<K> ks = map.keySet();
-        for (K k : ks) {
-            E e = map.get(k);
-            if (getter.get(k, e)) {
-                return e;
-            }
-        }
-        return null;
-    }
 
     public static <K, E> boolean has(Map<K, E> map, Getter<K, E> getter) {
         return get(map, getter) != null;
@@ -332,28 +358,6 @@ public class Ls1 {
      *
      ***************************************/
 
-
-    private static Same<Symbol> getIDSame() {
-        return (id1, id2) -> id1.obtainSymbol().equals(id2.obtainSymbol());
-    }
-
-    public static <E> E get(List<E> list, E ee, Same<E> same) {
-        return get(list, new Getter<Integer, E>() {
-            @Override
-            public boolean get(Integer key, E e) {
-                return same.same(e, ee);
-            }
-        });
-    }
-
-    public static <E> E get(E[] list, E ee, Same<E> same) {
-        return get(list, new Getter<Integer, E>() {
-            @Override
-            public boolean get(Integer key, E e) {
-                return same.same(e, ee);
-            }
-        });
-    }
 
     public static <E> boolean has(List<E> list, E ee, Same<E> same) {
         return get(list, ee, same) != null;
@@ -384,7 +388,7 @@ public class Ls1 {
     }
 
     public static int index(List list, Symbol id) {
-        return index(list, id, getIDSame());
+        return index(list, id, getSymbolSame());
     }
 
     /***************************************
@@ -407,7 +411,7 @@ public class Ls1 {
     }
 
     public static void replace(List list, Symbol id) {
-        replace(list, id, getIDSame());
+        replace(list, id, getSymbolSame());
     }
 
     /***************************************
@@ -433,7 +437,7 @@ public class Ls1 {
     }
 
     public static void replaceOrAdd(List list, Symbol ee) {
-        replaceOrAdd(list, ee, getIDSame());
+        replaceOrAdd(list, ee, getSymbolSame());
     }
 
     /***************************************
@@ -456,7 +460,7 @@ public class Ls1 {
     }
 
     public static void delete(List list, Symbol id) {
-        delete(list, id, getIDSame());
+        delete(list, id, getSymbolSame());
     }
 
 }
