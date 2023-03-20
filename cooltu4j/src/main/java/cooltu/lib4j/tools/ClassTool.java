@@ -8,12 +8,6 @@ import java.util.List;
 
 public class ClassTool {
 
-    /**************************************************
-     *
-     * 分割线
-     *
-     **************************************************/
-
     public static boolean isObject(String name) {
         return isGivenClass(Object.class, name);
     }
