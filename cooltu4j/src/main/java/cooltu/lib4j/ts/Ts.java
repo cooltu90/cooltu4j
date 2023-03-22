@@ -423,7 +423,7 @@ public class Ts {
      *
      **************************************************/
 
-    public static <T extends Symbol> SameGetter<? extends T> symbolSameGetter(T target) {
+    public static <T extends Symbol> SameGetter<T> symbolSameGetter(T target) {
         return new SameGetter<T>(target) {
             @Override
             public boolean same(Integer index, T t, T target) {
@@ -629,7 +629,7 @@ public class Ts {
         }
     }
 
-    public static <T extends Symbol> void replace(List<? extends T> ts, T target) {
+    public static <T extends Symbol> void replace(List<T> ts, T target) {
         replace(ts, symbolSameGetter(target));
     }
 
@@ -646,7 +646,7 @@ public class Ts {
         }
     }
 
-    public static <T extends Symbol> void replaceOrAdd(List<? extends T> ts, T target) {
+    public static <T extends Symbol> void replaceOrAdd(List<T> ts, T target) {
         replaceOrAdd(ts, symbolSameGetter(target));
     }
 
