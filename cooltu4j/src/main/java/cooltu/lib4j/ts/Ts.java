@@ -1,15 +1,13 @@
-package cooltu.lib4j.ls;
+package cooltu.lib4j.ts;
 
 import cooltu.lib4j.data.bean.Symbol;
-import cooltu.lib4j.fake.Fake;
-import cooltu.lib4j.ls.each.Each;
-import cooltu.lib4j.ls.each.MapEach;
-import cooltu.lib4j.ls.eachgetter.EachGetter;
-import cooltu.lib4j.ls.getter.*;
+import cooltu.lib4j.ts.each.Each;
+import cooltu.lib4j.ts.each.MapEach;
+import cooltu.lib4j.ts.eachgetter.EachGetter;
+import cooltu.lib4j.ts.getter.*;
 import cooltu.lib4j.tools.CountTool;
 import cooltu.lib4j.tools.OtherTool;
 
-import java.lang.annotation.Target;
 import java.util.*;
 
 public class Ts {
@@ -45,7 +43,7 @@ public class Ts {
         return null;
     }
 
-    public static <T> EachGetter<T> tsGetter(List<T> ls) {
+    public static <T> EachGetter<T> tsGetter(List<? extends T> ls) {
         return new EachGetter<T>() {
             @Override
             public T get(int position) {
@@ -224,24 +222,24 @@ public class Ts {
     }
 
     // List遍历
-    public static <T> void ls(List<T> ts, int step, Each<T> each) {
+    public static <T> void ls(List<? extends T> ts, int step, Each<T> each) {
         ls(tsGetter(ts), step, each);
     }
 
-    public static <T> void ls(List<T> ts, Each<T> each) {
+    public static <T> void ls(List<? extends T> ts, Each<T> each) {
         ls(ts, 1, each);
     }
 
-    public static <T> void rls(List<T> ts, int step, Each<T> each) {
+    public static <T> void rls(List<? extends T> ts, int step, Each<T> each) {
         rls(tsGetter(ts), step, each);
     }
 
-    public static <T> void rls(List<T> ts, Each<T> each) {
+    public static <T> void rls(List<? extends T> ts, Each<T> each) {
         rls(ts, 1, each);
     }
 
     // Set遍历
-    public static <T> void ls(Set<T> ts, Each<T> each) {
+    public static <T> void ls(Set<? extends T> ts, Each<T> each) {
         if (CountTool.count(ts) > 0) {
             int index = 0;
             Iterator<? extends T> iterator = ts.iterator();
@@ -425,7 +423,7 @@ public class Ts {
      *
      **************************************************/
 
-    public static <T extends Symbol> SameGetter<T> symbolSameGetter(T target) {
+    public static <T extends Symbol> SameGetter<? extends T> symbolSameGetter(T target) {
         return new SameGetter<T>(target) {
             @Override
             public boolean same(Integer index, T t, T target) {
@@ -470,11 +468,11 @@ public class Ts {
     }
 
 
-    public static <T> T get(Set<T> ts, Getter<Integer, T> getter) {
+    public static <T> T get(Set<? extends T> ts, Getter<Integer, T> getter) {
         if (ts == null) {
             return null;
         }
-        Iterator<T> iterator = ts.iterator();
+        Iterator<? extends T> iterator = ts.iterator();
         int index = 0;
         while (iterator.hasNext()) {
             T next = iterator.next();
@@ -486,7 +484,7 @@ public class Ts {
         return null;
     }
 
-    public static <T> T get(List<T> ts, Getter<Integer, T> getter) {
+    public static <T> T get(List<? extends T> ts, Getter<Integer, T> getter) {
         return get(tsGetter(ts), getter);
     }
 
@@ -514,7 +512,7 @@ public class Ts {
         return get(eachGetter, stringSymbolSameGetter(symbol));
     }
 
-    public static <T extends Symbol> T get(List<T> ts, T target) {
+    public static <T extends Symbol> T get(List<? extends T> ts, T target) {
         return get(tsGetter(ts), target);
     }
 
@@ -522,7 +520,7 @@ public class Ts {
         return get(tsGetter(ts), target);
     }
 
-    public static <T extends Symbol> T get(List<T> ts, String symbol) {
+    public static <T extends Symbol> T get(List<? extends T> ts, String symbol) {
         return get(tsGetter(ts), symbol);
     }
 
@@ -536,11 +534,11 @@ public class Ts {
      *
      **************************************************/
 
-    public static <T> boolean has(Set<T> ts, Getter<Integer, T> getter) {
+    public static <T> boolean has(Set<? extends T> ts, Getter<Integer, T> getter) {
         return get(ts, getter) != null;
     }
 
-    public static <T> boolean has(List<T> list, Getter<Integer, T> getter) {
+    public static <T> boolean has(List<? extends T> list, Getter<Integer, T> getter) {
         return get(list, getter) != null;
     }
 
@@ -552,7 +550,7 @@ public class Ts {
         return get(map, getter) != null;
     }
 
-    public static <T extends Symbol> boolean has(List<T> ts, T t) {
+    public static <T extends Symbol> boolean has(List<? extends T> ts, T t) {
         return get(ts, t) != null;
     }
 
@@ -560,7 +558,7 @@ public class Ts {
         return get(ts, t) != null;
     }
 
-    public static <T extends Symbol> boolean has(List<T> ts, String symbol) {
+    public static <T extends Symbol> boolean has(List<? extends T> ts, String symbol) {
         return get(ts, symbol) != null;
     }
 
@@ -584,7 +582,7 @@ public class Ts {
         return -1;
     }
 
-    public static <T> int index(List<T> ts, Getter<Integer, T> getter) {
+    public static <T> int index(List<? extends T> ts, Getter<Integer, T> getter) {
         return index(tsGetter(ts), getter);
     }
 
@@ -592,7 +590,7 @@ public class Ts {
         return index(tsGetter(ts), getter);
     }
 
-    public static <T extends Symbol> int index(List<T> ts, T target) {
+    public static <T extends Symbol> int index(List<? extends T> ts, T target) {
         return index(ts, symbolSameGetter(target));
     }
 
@@ -600,7 +598,7 @@ public class Ts {
         return index(ts, symbolSameGetter(target));
     }
 
-    public static <T extends Symbol> int index(List<T> ts, String symbol) {
+    public static <T extends Symbol> int index(List<? extends T> ts, String symbol) {
         return index(ts, stringSymbolSameGetter(symbol));
     }
 
@@ -631,7 +629,7 @@ public class Ts {
         }
     }
 
-    public static <T extends Symbol> void replace(List<T> ts, T target) {
+    public static <T extends Symbol> void replace(List<? extends T> ts, T target) {
         replace(ts, symbolSameGetter(target));
     }
 
@@ -648,7 +646,7 @@ public class Ts {
         }
     }
 
-    public static <T extends Symbol> void replaceOrAdd(List<T> ts, T target) {
+    public static <T extends Symbol> void replaceOrAdd(List<? extends T> ts, T target) {
         replaceOrAdd(ts, symbolSameGetter(target));
     }
 
@@ -657,14 +655,14 @@ public class Ts {
      * delete
      *
      **************************************************/
-    public static <T> void delete(List<T> ts, SameGetter<T> getter) {
+    public static <T> void delete(List<? extends T> ts, SameGetter<T> getter) {
         int index = index(ts, getter);
         if (index >= 0) {
             ts.remove(index);
         }
     }
 
-    public static <T extends Symbol> void delete(List<T> ts, T target) {
+    public static <T extends Symbol> void delete(List<? extends T> ts, T target) {
         delete(ts, symbolSameGetter(target));
     }
 

@@ -1,7 +1,7 @@
 package cooltu.lib4j.file.list;
 
-import cooltu.lib4j.ls.Ts;
-import cooltu.lib4j.ls.each.Each;
+import cooltu.lib4j.ts.Ts;
+import cooltu.lib4j.ts.each.Each;
 import cooltu.lib4j.tools.CountTool;
 
 import java.io.File;

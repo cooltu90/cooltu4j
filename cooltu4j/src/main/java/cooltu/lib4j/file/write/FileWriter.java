@@ -1,8 +1,8 @@
 package cooltu.lib4j.file.write;
 
 import cooltu.lib4j.file.FileTool;
-import cooltu.lib4j.ls.Ts;
-import cooltu.lib4j.ls.eachgetter.EachGetter;
+import cooltu.lib4j.ts.Ts;
+import cooltu.lib4j.ts.eachgetter.EachGetter;
 
 import java.io.BufferedWriter;
 import java.io.File;

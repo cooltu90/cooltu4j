@@ -1,8 +1,7 @@
 package cooltu.lib4j.fake;
 
-import cooltu.lib4j.ls.Ts;
-import cooltu.lib4j.ls.eachgetter.EachGetter;
-import cooltu.lib4j.tools.OtherTool;
+import cooltu.lib4j.ts.Ts;
+import cooltu.lib4j.ts.eachgetter.EachGetter;
 
 import java.awt.*;
 import java.util.List;

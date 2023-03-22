@@ -1,4 +1,4 @@
-package cooltu.lib4j.ls.getter;
+package cooltu.lib4j.ts.getter;
 
 public abstract class SameGetter<T> implements Getter<Integer, T> {
 
