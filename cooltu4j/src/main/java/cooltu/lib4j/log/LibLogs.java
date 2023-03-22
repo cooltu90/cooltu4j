@@ -1,5 +1,6 @@
 package cooltu.lib4j.log;
 
+import cooltu.lib4j.config.LibConfigs;
 import cooltu.lib4j.ls.Ts;
 import cooltu.lib4j.ls.eachgetter.EachGetter;
 import cooltu.lib4j.tools.CountTool;
@@ -10,24 +11,18 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
-public class LogBase {
+public class LibLogs {
     //封装了log方法，可以打印多种类型
     public static final int LEVEL_INFO = 0;
     public static final int LEVEL_WARNING = 1;
     public static final int LEVEL_ERROR = 2;
 
-    public static interface LogConfigs {
-        public String getDefaultTag();
-
-        public boolean isLog();
-
-        public void baseLog(int level, String tag, String msg);
+    public static LibConfigs getConfigs() {
+        return LibConfigs.configs();
     }
 
-    protected static LogConfigs logConfigs;
-
     private static String getDefaultTag() {
-        return logConfigs == null ? "log" : logConfigs.getDefaultTag();
+        return getConfigs() == null ? "log" : getConfigs().getDefaultLogTag();
     }
 
     private static String getDefaultTagI() {
@@ -43,7 +38,7 @@ public class LogBase {
     }
 
     private static boolean isLog() {
-        return logConfigs != null && logConfigs.isLog();
+        return getConfigs() != null && getConfigs().isLog();
     }
 
     public static void line(Object... msgs) {
@@ -208,7 +203,7 @@ public class LogBase {
     }
 
     private static void baseLog(int level, String tag, String msg) {
-        if (logConfigs == null) {
+        if (getConfigs() == null) {
             switch (level) {
                 case LEVEL_INFO:
                     System.out.println(tag + ":" + msg);
@@ -219,7 +214,7 @@ public class LogBase {
                     break;
             }
         } else {
-            logConfigs.baseLog(level, tag, msg);
+            getConfigs().baseLog(level, tag, msg);
         }
     }
 }
