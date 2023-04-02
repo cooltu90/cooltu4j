@@ -1,6 +1,7 @@
 package cooltu.lib4j.file.write;
 
 import cooltu.lib4j.file.FileTool;
+import cooltu.lib4j.log.LibLogs;
 import cooltu.lib4j.ts.Ts;
 import cooltu.lib4j.ts.eachgetter.EachGetter;
 
@@ -80,12 +81,13 @@ public class FileWriter {
                 bw.newLine();
             }
         } catch (Exception e) {
+            LibLogs.w(e);
         } finally {
             if (bw != null) {
                 try {
                     bw.close();
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    LibLogs.w(e);
                 }
                 bw = null;
             }
