@@ -1,5 +1,6 @@
-package cooltu.lib4j.data.bean;
+package cooltu.lib4j.data.bean.maxmin;
 
+import cooltu.lib4j.data.bean.CoreBean;
 import cooltu.lib4j.tools.CountTool;
 import cooltu.lib4j.tools.MathTool;
 
@@ -14,7 +15,7 @@ public class MaxMin<NUM extends Number, T> extends CoreBean {
         NUM getNum(T t);
     }
 
-    public static <NUM extends Number, T> MaxMin<NUM, T> obtian(List<T> list, Getter<NUM, T> getter) {
+    public static <NUM extends Number, T> MaxMin<NUM, T> obtain(List<T> list, Getter<NUM, T> getter) {
         MaxMin<NUM, T> maxMin = new MaxMin<NUM, T>();
         int count = CountTool.count(list);
         if (count > 0) {
