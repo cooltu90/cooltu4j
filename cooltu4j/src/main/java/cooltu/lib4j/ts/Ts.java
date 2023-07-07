@@ -770,4 +770,28 @@ public class Ts {
 
         public abstract void inject(E t);
     }
+
+    /**************************************************
+     *
+     * 获取List的最后一个元素
+     *
+     **************************************************/
+    public static <E> E last(List<E> list) {
+        int count = CountTool.count(list);
+        return count > 0 ? list.get(count - 1) : null;
+    }
+
+    /**************************************************
+     *
+     * 对List中添加元素
+     *
+     **************************************************/
+    public static <E> List<E> add(List<E> list, E e) {
+        if (list == null) {
+            list = new ArrayList<>();
+        }
+        list.add(e);
+        return list;
+    }
+
 }
