@@ -2,6 +2,7 @@ package cooltu.lib4j.ts;
 
 import cooltu.lib4j.data.bean.Symbol;
 import cooltu.lib4j.data.map.ListValueMap;
+import cooltu.lib4j.log.LibLogs;
 import cooltu.lib4j.ts.each.Each;
 import cooltu.lib4j.ts.each.MapEach;
 import cooltu.lib4j.ts.eachgetter.EachGetter;
@@ -865,9 +866,11 @@ public class Ts {
 
                 List<String> list = totalMap.get(getRootGroupKey());
 
+                StringBuilder sb = new StringBuilder();
                 for (int j = 0; j < gs.length; j++) {
                     if (j < gs.length - 1) {
-                        List<String> subList = totalMap.get(getLevelKey(j) + gs[j]);
+                        sb.append(gs[j]);
+                        List<String> subList = totalMap.get(sb.toString());
                         if (CountTool.isNull(subList)) {
                             list.add(gs[j]);
                         }
@@ -880,17 +883,23 @@ public class Ts {
                 return false;
             }
         });
+
+        LibLogs.i(totalMap);
+
         List<T> as = new ArrayList<>();
         groupSort(as, getter.getLevels(), 0, totalMap, tMap, getRootGroupKey());
         return as;
     }
 
     private static <T> void groupSort(List<T> container, int levels, int level, ListValueMap<String, String> categorgMap, Map<String, T> tMap, String key) {
+
+        LibLogs.i("key:" + key);
+
         Ts.ls(categorgMap.get(key), new Each<String>() {
             @Override
             public boolean each(int i, String s) {
                 if (level < levels - 1) {
-                    groupSort(container, levels, level + 1, categorgMap, tMap, getLevelKey(level) + s);
+                    groupSort(container, levels, level + 1, categorgMap, tMap, (getRootGroupKey().equals(key) ? "" : key) + s);
                 } else {
                     container.add(tMap.get(s));
                 }
@@ -902,11 +911,6 @@ public class Ts {
     private static String getRootGroupKey() {
         return "root";
     }
-
-    private static String getLevelKey(int level) {
-        return "c" + level + "_";
-    }
-
 
     public static interface GroupSortGetter<T> {
         String getGroup(int level, T t);
