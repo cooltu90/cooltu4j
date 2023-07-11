@@ -892,9 +892,6 @@ public class Ts {
     }
 
     private static <T> void groupSort(List<T> container, int levels, int level, ListValueMap<String, String> categorgMap, Map<String, T> tMap, String key) {
-
-        LibLogs.i("key:" + key);
-
         Ts.ls(categorgMap.get(key), new Each<String>() {
             @Override
             public boolean each(int i, String s) {
