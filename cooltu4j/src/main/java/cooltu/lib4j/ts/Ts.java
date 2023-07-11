@@ -1,6 +1,7 @@
 package cooltu.lib4j.ts;
 
 import cooltu.lib4j.data.bean.Symbol;
+import cooltu.lib4j.data.map.ListValueMap;
 import cooltu.lib4j.ts.each.Each;
 import cooltu.lib4j.ts.each.MapEach;
 import cooltu.lib4j.ts.eachgetter.EachGetter;
@@ -792,6 +793,128 @@ public class Ts {
         }
         list.add(e);
         return list;
+    }
+
+    /**************************************************
+     *
+     * 转换
+     *
+     **************************************************/
+
+    public static interface Convert<S, T> {
+        T convert(S s);
+    }
+
+    public static <T, S> List<T> convert(List<S> ss, Convert<S, T> convert) {
+        return convert(tsGetter(ss), convert);
+    }
+
+    public static <T, S> List<T> convert(S[] ss, Convert<S, T> convert) {
+        return convert(tsGetter(ss), convert);
+    }
+
+    public static <T> List<T> convert(int[] ss, Convert<Integer, T> convert) {
+        return convert(tsGetter(ss), convert);
+    }
+
+    public static <T, S> List<T> convert(EachGetter<S> getter, Convert<S, T> convert) {
+        ArrayList<T> ts = new ArrayList<>();
+        Ts.ls(getter, new Each<S>() {
+            @Override
+            public boolean each(int position, S s) {
+                T t = convert.convert(s);
+                if (t != null) {
+                    ts.add(t);
+                }
+                return false;
+            }
+        });
+        return ts;
+    }
+
+
+    /**************************************************
+     *
+     * 分组排序
+     *
+     **************************************************/
+    public static <T> List<T> groupSort(T[] ts, GroupSortGetter<T> getter) {
+        return groupSort(toList(ts), getter);
+    }
+
+    public static <T> List<T> groupSort(List<T> ts, GroupSortGetter<T> getter) {
+        ListValueMap<String, String> totalMap = new ListValueMap<>();
+        Map<String, T> tMap = new HashMap<>();
+
+        Collections.sort(ts, new Comparator<T>() {
+            @Override
+            public int compare(T o1, T o2) {
+                return getter.compare(o1, o2);
+            }
+        });
+
+        Ts.ls(ts, new Each<T>() {
+            @Override
+            public boolean each(int i, T t) {
+                tMap.put(getter.getGroup(getter.getLevels() - 1, t), t);
+
+                String[] gs = new String[getter.getLevels()];
+                for (int j = 0; j < gs.length; j++) {
+                    gs[j] = getter.getGroup(j, t);
+                }
+
+                List<String> list = totalMap.get(getRootGroupKey());
+
+                for (int j = 0; j < gs.length; j++) {
+                    if (j < gs.length - 1) {
+                        List<String> subList = totalMap.get(getLevelKey(j) + gs[j]);
+                        if (CountTool.isNull(subList)) {
+                            list.add(gs[j]);
+                        }
+                        list = subList;
+                    } else {
+                        list.add(gs[j]);
+                    }
+
+                }
+                return false;
+            }
+        });
+        List<T> as = new ArrayList<>();
+        groupSort(as, getter.getLevels(), 0, totalMap, tMap, getRootGroupKey());
+        return as;
+    }
+
+    private static <T> void groupSort(List<T> container, int levels, int level, ListValueMap<String, String> categorgMap, Map<String, T> tMap, String key) {
+        Ts.ls(categorgMap.get(key), new Each<String>() {
+            @Override
+            public boolean each(int i, String s) {
+                if (level < levels - 1) {
+                    groupSort(container, levels, level + 1, categorgMap, tMap, getLevelKey(level) + s);
+                } else {
+                    container.add(tMap.get(s));
+                }
+                return false;
+            }
+        });
+    }
+
+    private static String getRootGroupKey() {
+        return "root";
+    }
+
+    private static String getLevelKey(int level) {
+        return "c" + level + "_";
+    }
+
+
+    public static interface GroupSortGetter<T> {
+        String getGroup(int level, T t);
+
+        int getLevels();
+
+        int compare(T o1, T o2);
+
     }
 
 }
