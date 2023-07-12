@@ -2,13 +2,13 @@ package cooltu.lib4j.ts;
 
 import cooltu.lib4j.data.bean.Symbol;
 import cooltu.lib4j.data.map.ListValueMap;
-import cooltu.lib4j.log.LibLogs;
+import cooltu.lib4j.tools.CountTool;
+import cooltu.lib4j.tools.OtherTool;
 import cooltu.lib4j.ts.each.Each;
 import cooltu.lib4j.ts.each.MapEach;
 import cooltu.lib4j.ts.eachgetter.EachGetter;
-import cooltu.lib4j.ts.getter.*;
-import cooltu.lib4j.tools.CountTool;
-import cooltu.lib4j.tools.OtherTool;
+import cooltu.lib4j.ts.getter.Getter;
+import cooltu.lib4j.ts.getter.SameGetter;
 
 import java.util.*;
 
@@ -883,8 +883,6 @@ public class Ts {
                 return false;
             }
         });
-
-        LibLogs.i(totalMap);
 
         List<T> as = new ArrayList<>();
         groupSort(as, getter.getLevels(), 0, totalMap, tMap, getRootGroupKey());
