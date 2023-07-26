@@ -1,47 +1,8 @@
 package cooltu.lib4j.tools;
 
 import java.io.File;
-import java.nio.ByteBuffer;
 
 public class ConvertTool {
-
-    /**************************************************
-     *
-     * float和int数组之间的转换
-     *
-     **************************************************/
-    private static int[] float2IntArray(float v) {
-        int num = Float.floatToIntBits(v);
-        int[] arrs = new int[4];
-        arrs[0] = num & 0xff;
-        arrs[1] = (num & (0xff << 8)) >> 8;
-        arrs[2] = (num & (0xff << 16)) >> 16;
-        arrs[3] = (num & (0xff << 24)) >> 24;
-        return arrs;
-    }
-
-    private static float intArray2Float(int[] arrs) {
-        int num = 0;
-        num = num | arrs[0];
-        num = num | (arrs[1] << 8);
-        num = num | (arrs[2] << 16);
-        num = num | (arrs[3] << 24);
-        return Float.intBitsToFloat(num);
-    }
-
-    private static byte[] float2ByteArray(float v) {
-        return ByteBuffer.allocate(4).putFloat(v).array();
-    }
-
-    public static float byteArray2Float(byte[] arrs) {
-        int num = 0;
-        num = num | (arrs[0] & 0xff);
-        num = num | ((arrs[1] & 0xff) << 8);
-        num = num | ((arrs[2] & 0xff) << 16);
-        num = num | ((arrs[3] & 0xff) << 24);
-        return Float.intBitsToFloat(num);
-    }
-
     /**************************************************
      *
      * 字母大小写的操作
