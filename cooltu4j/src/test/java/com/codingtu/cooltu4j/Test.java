@@ -1,6 +1,7 @@
 package com.codingtu.cooltu4j;
 
 import cooltu.lib4j.data.bean.ByteValue;
+import cooltu.lib4j.ts.Ts;
 
 public class Test {
 
@@ -16,7 +17,6 @@ public class Test {
         Logs.i(i);
 
         Logs.i(b);
-
 
     }
 

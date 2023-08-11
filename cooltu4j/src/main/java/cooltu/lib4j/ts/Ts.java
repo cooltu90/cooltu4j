@@ -4,6 +4,7 @@ import cooltu.lib4j.data.bean.Symbol;
 import cooltu.lib4j.data.map.ListValueMap;
 import cooltu.lib4j.tools.CountTool;
 import cooltu.lib4j.tools.OtherTool;
+import cooltu.lib4j.tools.StringTool;
 import cooltu.lib4j.ts.each.Each;
 import cooltu.lib4j.ts.each.MapEach;
 import cooltu.lib4j.ts.eachgetter.EachGetter;
@@ -184,12 +185,6 @@ public class Ts {
             }
         };
     }
-
-    /**************************************************
-     *
-     *
-     *
-     **************************************************/
 
     /**************************************************
      *
@@ -457,11 +452,28 @@ public class Ts {
      * 获取符合条件的元素
      *
      ***********************************/
+    public static <K, V> V get(Getter<K, V> getter, Map<K, V> map) {
+        if (getter == null || map == null)
+            return null;
 
-    private static <T> T get(EachGetter<T> eachGetter, Getter<Integer, T> getter) {
+        Set<K> ks = map.keySet();
+        for (K k : ks) {
+            V v = map.get(k);
+            if (getter.get(k, v)) {
+                return v;
+            }
+        }
+        return null;
+    }
+
+    public static <T> T get(EachGetter<T> eachGetter, Getter<Integer, T> getter) {
+        if (eachGetter == null || getter == null)
+            return null;
+
         int count = eachGetter.count();
+        T t = null;
         for (int i = 0; i < count; i++) {
-            T t = eachGetter.get(i);
+            t = eachGetter.get(i);
             if (getter.get(i, t)) {
                 return t;
             }
@@ -470,8 +482,38 @@ public class Ts {
     }
 
 
-    public static <T> T get(Set<? extends T> ts, Getter<Integer, T> getter) {
-        if (ts == null) {
+    public static <T> T get(Getter<Integer, T> getter, T... ts) {
+        if (getter == null)
+            return null;
+
+        int count = CountTool.count(ts);
+        T t = null;
+        for (int i = 0; i < count; i++) {
+            t = ts[i];
+            if (getter.get(i, t)) {
+                return t;
+            }
+        }
+        return null;
+    }
+
+    public static <T> T get(Getter<Integer, T> getter, List<? extends T> ts) {
+        if (getter == null)
+            return null;
+
+        int count = CountTool.count(ts);
+        T t = null;
+        for (int i = 0; i < count; i++) {
+            t = ts.get(i);
+            if (getter.get(i, t)) {
+                return t;
+            }
+        }
+        return null;
+    }
+
+    public static <T> T get(Getter<Integer, T> getter, Set<? extends T> ts) {
+        if (CountTool.count(ts) <= 0) {
             return null;
         }
         Iterator<? extends T> iterator = ts.iterator();
@@ -486,48 +528,143 @@ public class Ts {
         return null;
     }
 
-    public static <T> T get(List<? extends T> ts, Getter<Integer, T> getter) {
-        return get(tsGetter(ts), getter);
-    }
 
-    public static <T> T get(T[] ts, Getter<Integer, T> getter) {
-        return get(tsGetter(ts), getter);
-    }
+    public static String get(String symbol, String... strs) {
+        if (StringTool.isBlank(symbol))
+            return null;
 
-
-    public static <K, V> V get(Map<K, V> map, Getter<K, V> getter) {
-        Set<K> ks = map.keySet();
-        for (K k : ks) {
-            V v = map.get(k);
-            if (getter.get(k, v)) {
-                return v;
+        int count = CountTool.count(strs);
+        String str = null;
+        for (int i = 0; i < count; i++) {
+            str = strs[i];
+            if (symbol.equals(str)) {
+                return str;
             }
         }
         return null;
     }
 
+    public static <T extends Symbol> T get(String symbol, T... ts) {
+        if (StringTool.isBlank(symbol))
+            return null;
+
+        int count = CountTool.count(ts);
+        T t = null;
+        for (int i = 0; i < count; i++) {
+            t = ts[i];
+            if (symbol.equals(t.obtainSymbol())) {
+                return t;
+            }
+        }
+        return null;
+    }
+
+    public static <T extends Symbol> T get(T target, T... ts) {
+        if (target == null)
+            return null;
+        return get(target.obtainSymbol(), ts);
+    }
+
+
+    public static <T extends Symbol> T get(String symbol, List<? extends T> ts) {
+        if (StringTool.isBlank(symbol))
+            return null;
+
+        int count = CountTool.count(ts);
+        T t = null;
+        for (int i = 0; i < count; i++) {
+            t = ts.get(i);
+            if (symbol.equals(t.obtainSymbol())) {
+                return t;
+            }
+        }
+        return null;
+    }
+
+
+    public static <T extends Symbol> T get(T target, List<? extends T> ts) {
+        if (target == null)
+            return null;
+        return get(target.obtainSymbol(), ts);
+    }
+
+
+    public static <T extends Symbol> T get(String symbol, Set<? extends T> ts) {
+        if (StringTool.isBlank(symbol))
+            return null;
+
+        if (CountTool.count(ts) <= 0)
+            return null;
+
+        for (T t : ts) {
+            if (symbol.equals(t.obtainSymbol())) {
+                return t;
+            }
+        }
+        return null;
+    }
+
+    public static <T extends Symbol> T get(T target, Set<? extends T> ts) {
+        if (target == null)
+            return null;
+        return get(target.obtainSymbol(), ts);
+    }
+
+    @Deprecated
+    public static <K, V> V get(Map<K, V> map, Getter<K, V> getter) {
+        return get(getter, map);
+    }
+
+    @Deprecated
+    public static <T> T get(Set<? extends T> ts, Getter<Integer, T> getter) {
+        return get(getter, ts);
+    }
+
+    @Deprecated
+    public static <T> T get(List<? extends T> ts, Getter<Integer, T> getter) {
+        return get(getter, ts);
+    }
+
+    @Deprecated
+    public static <T> T get(T[] ts, Getter<Integer, T> getter) {
+        return get(getter, ts);
+    }
+
+    @Deprecated
     private static <T extends Symbol> T get(EachGetter<T> eachGetter, T target) {
         return get(eachGetter, symbolSameGetter(target));
     }
 
-    private static <T extends Symbol> T get(EachGetter<T> eachGetter, String symbol) {
+    @Deprecated
+    public static <T extends Symbol> T get(EachGetter<T> eachGetter, String symbol) {
+        return get(symbol, eachGetter);
+    }
+
+    @Deprecated
+    public static <T extends Symbol> T get(String symbol, EachGetter<T> eachGetter) {
+        if (StringTool.isBlank(symbol))
+            return null;
         return get(eachGetter, stringSymbolSameGetter(symbol));
     }
 
-    public static <T extends Symbol> T get(List<? extends T> ts, T target) {
-        return get(tsGetter(ts), target);
-    }
-
-    public static <T extends Symbol> T get(T[] ts, T target) {
-        return get(tsGetter(ts), target);
-    }
-
-    public static <T extends Symbol> T get(List<? extends T> ts, String symbol) {
-        return get(tsGetter(ts), symbol);
-    }
-
+    @Deprecated
     public static <T extends Symbol> T get(T[] ts, String symbol) {
-        return get(tsGetter(ts), symbol);
+        return get(symbol, ts);
+    }
+
+    @Deprecated
+    public static <T extends Symbol> T get(T[] ts, T target) {
+        return get(target, ts);
+    }
+
+    @Deprecated
+    public static <T extends Symbol> T get(List<? extends T> ts, String symbol) {
+        return get(symbol, ts);
+    }
+
+    @Deprecated
+    public static <T extends Symbol> T get(List<? extends T> ts, T target) {
+        return get(target, ts);
     }
 
     /**************************************************
@@ -535,37 +672,94 @@ public class Ts {
      * has
      *
      **************************************************/
-
-    public static <T> boolean has(Set<? extends T> ts, Getter<Integer, T> getter) {
-        return get(ts, getter) != null;
+    public static boolean has(String symbol, String... strs) {
+        return get(symbol, strs) != null;
     }
 
-    public static <T> boolean has(List<? extends T> list, Getter<Integer, T> getter) {
-        return get(list, getter) != null;
+    public static <T extends Symbol> boolean has(String symbol, T... ts) {
+        return get(symbol, ts) != null;
     }
 
-    public static <T> boolean has(T[] list, Getter<Integer, T> getter) {
-        return get(list, getter) != null;
+    public static <T extends Symbol> boolean has(T t, T... ts) {
+        return get(t, ts) != null;
     }
 
-    public static <K, V> boolean has(Map<K, V> map, Getter<K, V> getter) {
-        return get(map, getter) != null;
+    public static <T extends Symbol> boolean has(String symbol, List<? extends T> ts) {
+        return get(symbol, ts) != null;
     }
 
-    public static <T extends Symbol> boolean has(List<? extends T> ts, T t) {
-        return get(ts, t) != null;
+    public static <T extends Symbol> boolean has(T t, List<? extends T> ts) {
+        return get(t, ts) != null;
     }
 
-    public static <T extends Symbol> boolean has(T[] ts, T t) {
-        return get(ts, t) != null;
+    public static <T extends Symbol> boolean has(String symbol, Set<? extends T> ts) {
+        return get(symbol, ts) != null;
     }
 
-    public static <T extends Symbol> boolean has(List<? extends T> ts, String symbol) {
-        return get(ts, symbol) != null;
+    public static <T extends Symbol> boolean has(T t, Set<? extends T> ts) {
+        return get(t, ts) != null;
     }
 
+
+    public static <T> boolean has(Getter<Integer, T> getter, Set<? extends T> ts) {
+        return get(getter, ts) != null;
+    }
+
+    public static <T> boolean has(Getter<Integer, T> getter, List<? extends T> list) {
+        return get(getter, list) != null;
+    }
+
+    public static <T> boolean has(Getter<Integer, T> getter, T... list) {
+        return get(getter, list) != null;
+    }
+
+    public static <K, V> boolean has(Getter<K, V> getter, Map<K, V> map) {
+        return get(getter, map) != null;
+    }
+
+    public static <T> boolean has(EachGetter<T> eachGetter, Getter<Integer, T> getter) {
+        return get(eachGetter, getter) != null;
+    }
+
+    @Deprecated
     public static <T extends Symbol> boolean has(T[] ts, String symbol) {
-        return get(ts, symbol) != null;
+        return has(symbol, ts);
+    }
+
+    @Deprecated
+    public static <T extends Symbol> boolean has(T[] ts, T t) {
+        return has(t, ts);
+    }
+
+    @Deprecated
+    public static <T extends Symbol> boolean has(List<? extends T> ts, String symbol) {
+        return has(symbol, ts);
+    }
+
+    @Deprecated
+    public static <T extends Symbol> boolean has(List<? extends T> ts, T t) {
+        return has(t, ts);
+    }
+
+
+    @Deprecated
+    public static <T> boolean has(Set<? extends T> ts, Getter<Integer, T> getter) {
+        return has(getter, ts);
+    }
+
+    @Deprecated
+    public static <T> boolean has(List<? extends T> ts, Getter<Integer, T> getter) {
+        return has(getter, ts);
+    }
+
+    @Deprecated
+    public static <T> boolean has(T[] ts, Getter<Integer, T> getter) {
+        return has(getter, ts);
+    }
+
+    @Deprecated
+    public static <K, V> boolean has(Map<K, V> map, Getter<K, V> getter) {
+        return has(getter, map);
     }
 
     /**************************************************
@@ -573,10 +767,13 @@ public class Ts {
      * index
      *
      **************************************************/
-    private static <T> int index(EachGetter<T> eachGetter, Getter<Integer, T> getter) {
+    public static <T> int index(EachGetter<T> eachGetter, Getter<Integer, T> getter) {
+        if (eachGetter == null || getter == null)
+            return -1;
         int count = eachGetter.count();
+        T t = null;
         for (int i = 0; i < count; i++) {
-            T t = eachGetter.get(i);
+            t = eachGetter.get(i);
             if (getter.get(i, t)) {
                 return i;
             }
@@ -584,32 +781,122 @@ public class Ts {
         return -1;
     }
 
+    public static <T> int index(Getter<Integer, T> getter, T... ts) {
+        if (getter == null)
+            return -1;
+
+        int count = CountTool.count(ts);
+        T t = null;
+        for (int i = 0; i < count; i++) {
+            t = ts[i];
+            if (getter.get(i, t)) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    public static <T> int index(Getter<Integer, T> getter, List<? extends T> ts) {
+        if (getter == null)
+            return -1;
+
+        int count = CountTool.count(ts);
+        T t = null;
+        for (int i = 0; i < count; i++) {
+            t = ts.get(i);
+            if (getter.get(i, t)) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    public static int index(String symbol, String... strs) {
+        if (StringTool.isBlank(symbol))
+            return -1;
+
+        int count = CountTool.count(strs);
+        String str = null;
+        for (int i = 0; i < count; i++) {
+            str = strs[i];
+            if (symbol.equals(str)) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    public static <T extends Symbol> int index(String symbol, T... ts) {
+        if (StringTool.isBlank(symbol))
+            return -1;
+
+        int count = CountTool.count(ts);
+        T t = null;
+        for (int i = 0; i < count; i++) {
+            t = ts[i];
+            if (symbol.equals(t.obtainSymbol())) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    public static <T extends Symbol> int index(T target, T... ts) {
+        if (target == null)
+            return -1;
+        return index(target.obtainSymbol(), ts);
+    }
+
+
+    public static <T extends Symbol> int index(String symbol, List<? extends T> ts) {
+        if (StringTool.isBlank(symbol))
+            return -1;
+
+        int count = CountTool.count(ts);
+        T t = null;
+        for (int i = 0; i < count; i++) {
+            t = ts.get(i);
+            if (symbol.equals(t.obtainSymbol())) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    public static <T extends Symbol> int index(T target, List<? extends T> ts) {
+        if (target == null)
+            return -1;
+        return index(target.obtainSymbol(), ts);
+    }
+
+    @Deprecated
     public static <T> int index(List<? extends T> ts, Getter<Integer, T> getter) {
-        return index(tsGetter(ts), getter);
+        return index(getter, ts);
     }
 
+    @Deprecated
     public static <T> int index(T[] ts, Getter<Integer, T> getter) {
-        return index(tsGetter(ts), getter);
+        return index(getter, ts);
     }
 
+    @Deprecated
     public static <T extends Symbol> int index(List<? extends T> ts, T target) {
-        return index(ts, symbolSameGetter(target));
+        return index(target, ts);
     }
 
+    @Deprecated
     public static <T extends Symbol> int index(T[] ts, T target) {
-        return index(ts, symbolSameGetter(target));
+        return index(target, ts);
     }
 
+    @Deprecated
     public static <T extends Symbol> int index(List<? extends T> ts, String symbol) {
-        return index(ts, stringSymbolSameGetter(symbol));
+        return index(symbol, ts);
     }
 
+    @Deprecated
     public static <T extends Symbol> int index(T[] ts, String symbol) {
-        return index(ts, stringSymbolSameGetter(symbol));
-    }
-
-    public static int index(String target, List<String> ss) {
-        return index(ss, stringSameGetter(target));
+        return index(symbol, ts);
     }
 
     /**************************************************
