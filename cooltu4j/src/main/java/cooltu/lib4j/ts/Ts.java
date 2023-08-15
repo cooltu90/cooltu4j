@@ -904,30 +904,71 @@ public class Ts {
      * replace
      *
      **************************************************/
+
+    @Deprecated
     public static <T> void replace(List<T> ts, SameGetter<T> getter) {
-        int index = index(ts, getter);
+        replace(getter, ts);
+    }
+
+    @Deprecated
+    public static <T> void replace(T[] ts, SameGetter<T> getter) {
+        replace(getter, ts);
+    }
+
+    @Deprecated
+    public static <T extends Symbol> void replace(List<T> ts, T target) {
+        replace(target, ts);
+    }
+
+    @Deprecated
+    public static <T extends Symbol> void replace(T[] ts, T target) {
+        replace(target, ts);
+    }
+
+    @Deprecated
+    public static <T> void replaceOrAdd(List<T> ts, SameGetter<T> getter) {
+        replaceOrAdd(getter, ts);
+    }
+
+    @Deprecated
+    public static <T extends Symbol> void replaceOrAdd(List<T> ts, T target) {
+        replaceOrAdd(target, ts);
+    }
+
+
+    public static <T> void replace(SameGetter<T> getter, List<T> ts) {
+        int index = index(getter, ts);
         if (index >= 0) {
             ts.set(index, getter.target);
         }
     }
 
-    public static <T> void replace(T[] ts, SameGetter<T> getter) {
-        int index = index(ts, getter);
+    public static <T> void replace(SameGetter<T> getter, T... ts) {
+        int index = index(getter, ts);
         if (index >= 0) {
             ts[index] = getter.target;
         }
     }
 
-    public static <T extends Symbol> void replace(List<T> ts, T target) {
-        replace(ts, symbolSameGetter(target));
+
+    public static <T extends Symbol> void replace(T target, List<T> ts) {
+        int index = index(target, ts);
+        if (index >= 0) {
+            ts.set(index, target);
+        }
+
     }
 
-    public static <T extends Symbol> void replace(T[] ts, T target) {
-        replace(ts, symbolSameGetter(target));
+
+    public static <T extends Symbol> void replace(T target, T... ts) {
+        int index = index(target, ts);
+        if (index >= 0) {
+            ts[index] = target;
+        }
     }
 
-    public static <T> void replaceOrAdd(List<T> ts, SameGetter<T> getter) {
-        int index = index(ts, getter);
+    public static <T> void replaceOrAdd(SameGetter<T> getter, List<T> ts) {
+        int index = index(getter, ts);
         if (index >= 0) {
             ts.set(index, getter.target);
         } else {
@@ -935,8 +976,13 @@ public class Ts {
         }
     }
 
-    public static <T extends Symbol> void replaceOrAdd(List<T> ts, T target) {
-        replaceOrAdd(ts, symbolSameGetter(target));
+    public static <T extends Symbol> void replaceOrAdd(T target, List<T> ts) {
+        int index = index(target, ts);
+        if (index >= 0) {
+            ts.set(index, target);
+        } else {
+            ts.add(target);
+        }
     }
 
     /**************************************************
@@ -944,15 +990,29 @@ public class Ts {
      * delete
      *
      **************************************************/
-    public static <T> void delete(List<? extends T> ts, SameGetter<T> getter) {
-        int index = index(ts, getter);
+    public static <T> void delete(SameGetter<T> getter, List<? extends T> ts) {
+        int index = index(getter, ts);
         if (index >= 0) {
             ts.remove(index);
         }
     }
 
+    public static <T extends Symbol> void delete(T target, List<? extends T> ts) {
+        int index = index(target, ts);
+        if (index >= 0) {
+            ts.remove(index);
+        }
+    }
+
+
+    @Deprecated
+    public static <T> void delete(List<? extends T> ts, SameGetter<T> getter) {
+        delete(getter, ts);
+    }
+
+    @Deprecated
     public static <T extends Symbol> void delete(List<? extends T> ts, T target) {
-        delete(ts, symbolSameGetter(target));
+        delete(target, ts);
     }
 
     /**************************************************
@@ -1007,14 +1067,9 @@ public class Ts {
         if (count > 0) {
             T[] newArray = (T[]) java.lang.reflect.Array.newInstance
                     (objs[0].getClass(), count);
-
-            Ts.ls(objs, new Each<Object>() {
-                @Override
-                public boolean each(int position, Object o) {
-                    newArray[position] = (T) o;
-                    return false;
-                }
-            });
+            for (int i = 0; i < count; i++) {
+                newArray[i] = (T) objs[i];
+            }
             return newArray;
         }
         return null;
@@ -1088,23 +1143,63 @@ public class Ts {
      * 转换
      *
      **************************************************/
-
     public static interface Convert<S, T> {
         T convert(S s);
     }
 
+    public static <T, S> List<T> convert(Convert<S, T> convert, EachGetter<S> getter) {
+        ArrayList<T> ts = new ArrayList<>();
+        int count = getter.count();
+        for (int i = 0; i < count; i++) {
+            ts.add(convert.convert(getter.get(i)));
+        }
+        return ts;
+    }
+
+    public static <T, S> List<T> convert(Convert<S, T> convert, List<S> ss) {
+        ArrayList<T> ts = new ArrayList<>();
+        int count = CountTool.count(ss);
+        for (int i = 0; i < count; i++) {
+            ts.add(convert.convert(ss.get(i)));
+        }
+        return ts;
+    }
+
+    public static <T, S> List<T> convert(Convert<S, T> convert, S... ss) {
+        ArrayList<T> ts = new ArrayList<>();
+        int count = CountTool.count(ss);
+        for (int i = 0; i < count; i++) {
+            ts.add(convert.convert(ss[i]));
+        }
+        return ts;
+    }
+
+    public static <T> List<T> convert(Convert<Integer, T> convert, int... ss) {
+        ArrayList<T> ts = new ArrayList<>();
+        int count = CountTool.count(ss);
+        for (int i = 0; i < count; i++) {
+            ts.add(convert.convert(ss[i]));
+        }
+        return ts;
+    }
+
+
+    @Deprecated
     public static <T, S> List<T> convert(List<S> ss, Convert<S, T> convert) {
-        return convert(tsGetter(ss), convert);
+        return convert(convert, ss);
     }
 
+    @Deprecated
     public static <T, S> List<T> convert(S[] ss, Convert<S, T> convert) {
-        return convert(tsGetter(ss), convert);
+        return convert(convert, ss);
     }
 
+    @Deprecated
     public static <T> List<T> convert(int[] ss, Convert<Integer, T> convert) {
-        return convert(tsGetter(ss), convert);
+        return convert(convert, ss);
     }
 
+    @Deprecated
     public static <T, S> List<T> convert(EachGetter<S> getter, Convert<S, T> convert) {
         ArrayList<T> ts = new ArrayList<>();
         Ts.ls(getter, new Each<S>() {
@@ -1119,7 +1214,6 @@ public class Ts {
         });
         return ts;
     }
-
 
     /**************************************************
      *
