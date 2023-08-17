@@ -4,6 +4,8 @@ import cooltu.lib4j.ts.Ts;
 
 import java.io.File;
 import java.text.DecimalFormat;
+import java.util.ArrayList;
+import java.util.List;
 
 public class StringTool {
     /**************************************************
@@ -134,6 +136,42 @@ public class StringTool {
      * 获取子字符串
      *
      **************************************************/
+    public static List<String> getSubs(String oriStr, String startStr, String left, String right) {
+        ArrayList<String> strs = new ArrayList<>();
+        int fromIndex = 0;
+        int endIndex;
+        while (true) {
+            if (StringTool.isNotBlank(startStr)) {
+                fromIndex = oriStr.indexOf(startStr, fromIndex);
+                if (fromIndex >= 0) {
+                    fromIndex += startStr.length();
+                } else {
+                    break;
+                }
+            }
+
+
+            fromIndex = oriStr.indexOf(left, fromIndex);
+            if (fromIndex < 0) {
+                break;
+            }
+
+            fromIndex += left.length();
+
+            endIndex = oriStr.indexOf(right, fromIndex);
+            if (endIndex < 0) {
+                break;
+            }
+
+            strs.add(oriStr.substring(fromIndex, endIndex));
+
+            fromIndex = endIndex + right.length();
+
+        }
+        return strs;
+
+    }
+
     //严格模式
     public static String getSubStrictMode(String oriStr, String startStr, String left, String right) {
         int startIndex = 0;
