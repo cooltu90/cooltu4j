@@ -1151,7 +1151,10 @@ public class Ts {
         ArrayList<T> ts = new ArrayList<>();
         int count = getter.count();
         for (int i = 0; i < count; i++) {
-            ts.add(convert.convert(getter.get(i)));
+            T t = convert.convert(getter.get(i));
+            if (t != null) {
+                ts.add(t);
+            }
         }
         return ts;
     }
@@ -1160,7 +1163,10 @@ public class Ts {
         ArrayList<T> ts = new ArrayList<>();
         int count = CountTool.count(ss);
         for (int i = 0; i < count; i++) {
-            ts.add(convert.convert(ss.get(i)));
+            T t = convert.convert(ss.get(i));
+            if (t != null) {
+                ts.add(t);
+            }
         }
         return ts;
     }
@@ -1169,7 +1175,10 @@ public class Ts {
         ArrayList<T> ts = new ArrayList<>();
         int count = CountTool.count(ss);
         for (int i = 0; i < count; i++) {
-            ts.add(convert.convert(ss[i]));
+            T t = convert.convert(ss[i]);
+            if (t != null) {
+                ts.add(t);
+            }
         }
         return ts;
     }
@@ -1178,7 +1187,10 @@ public class Ts {
         ArrayList<T> ts = new ArrayList<>();
         int count = CountTool.count(ss);
         for (int i = 0; i < count; i++) {
-            ts.add(convert.convert(ss[i]));
+            T t = convert.convert(ss[i]);
+            if (t != null) {
+                ts.add(t);
+            }
         }
         return ts;
     }
@@ -1201,18 +1213,7 @@ public class Ts {
 
     @Deprecated
     public static <T, S> List<T> convert(EachGetter<S> getter, Convert<S, T> convert) {
-        ArrayList<T> ts = new ArrayList<>();
-        Ts.ls(getter, new Each<S>() {
-            @Override
-            public boolean each(int position, S s) {
-                T t = convert.convert(s);
-                if (t != null) {
-                    ts.add(t);
-                }
-                return false;
-            }
-        });
-        return ts;
+        return convert(convert, getter);
     }
 
     /**************************************************
