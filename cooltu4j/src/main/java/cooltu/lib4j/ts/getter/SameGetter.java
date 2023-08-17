@@ -1,10 +1,10 @@
 package cooltu.lib4j.ts.getter;
 
-public abstract class SameGetter<T> implements Getter<Integer, T> {
+public abstract class SameGetter<S, T> implements Getter<Integer, T> {
 
-    public T target;
+    public S target;
 
-    public SameGetter(T target) {
+    public SameGetter(S target) {
         this.target = target;
     }
 
@@ -13,5 +13,5 @@ public abstract class SameGetter<T> implements Getter<Integer, T> {
         return same(integer, t, target);
     }
 
-    public abstract boolean same(Integer index, T t, T target);
+    public abstract boolean same(Integer index, T t, S target);
 }
