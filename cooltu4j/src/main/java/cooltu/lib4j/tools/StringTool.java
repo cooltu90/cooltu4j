@@ -1,5 +1,7 @@
 package cooltu.lib4j.tools;
 
+import cooltu.lib4j.ts.Ts;
+
 import java.io.File;
 import java.text.DecimalFormat;
 
@@ -108,13 +110,23 @@ public class StringTool {
      * 判断给定的字符串，是否在给定的字符串数组中
      *
      **************************************************/
+    @Deprecated
     public static boolean inRange(String str, String... strs) {
-        for (int i = 0; i < CountTool.count(strs); i++) {
-            if (strs[i].equals(str)) {
-                return true;
-            }
-        }
-        return false;
+        return Ts.has(str, strs);
+    }
+
+
+    /**************************************************
+     *
+     * 切去后缀
+     *
+     **************************************************/
+    public static String cutSuffix(String str, String suffix) {
+        return str.substring(0, str.length() - suffix.length());
+    }
+
+    public static String cutSuffix(Class aClass, String suffix) {
+        return cutSuffix(aClass.getSimpleName(), suffix);
     }
 
     /**************************************************
@@ -122,48 +134,56 @@ public class StringTool {
      * 获取子字符串
      *
      **************************************************/
+    //严格模式
+    public static String getSubStrictMode(String oriStr, String startStr, String left, String right) {
+        int startIndex = 0;
+        if (isNotBlank(startStr)) {
+            startIndex = oriStr.indexOf(startStr);
+            if (startIndex < 0) {
+                return null;
+            }
+            startIndex += startStr.length();
+        }
+
+        startIndex = oriStr.indexOf(left, startIndex);
+        if (startIndex < 0) {
+            return null;
+        }
+        startIndex += left.length();
+
+        int endIndex = oriStr.indexOf(right, startIndex);
+        if (endIndex < 0) {
+            return null;
+        }
+        return oriStr.substring(startIndex, endIndex);
+    }
+
+    @Deprecated
     public static String getSub(String oriStr, String startStr, String left, String right) {
         int fromIndex = isBlank(startStr) ? 0 : (oriStr.indexOf(startStr) + startStr.length());
         int startIndex = oriStr.indexOf(left, fromIndex) + left.length();
         return oriStr.substring(startIndex, oriStr.indexOf(right, startIndex));
     }
 
-    /**************************************************
-     *
-     * 获取子字符串
-     * startIndex 为起点位置
-     * bit 为截取几位
-     *
-     **************************************************/
-    public static String getSubFromStart(String str, int startIndex, int bit) {
-        int endIndex = startIndex + bit;
-        return getSub(str, startIndex, endIndex);
-    }
+    //获取子字符串，但是会判断首尾位置
+    private static String getSubStrictMode(String str, int startIndex, int endIndex) {
+        int length = str.length();
+        if (startIndex > endIndex) {
+            int temp = startIndex;
+            startIndex = endIndex;
+            endIndex = temp;
+        }
 
+        if (startIndex < 0 || endIndex >= length) {
+            return null;
+        }
 
-    public static String getSubFromStart(String str, int bit) {
-        return getSubFromStart(str, 0, bit);
-    }
-
-
-    /**************************************************
-     *
-     * 获取子字符串
-     * endIndex 为终点位置
-     * bit 为截取几位
-     *
-     **************************************************/
-    public static String getSubFromEnd(String str, int endIndex, int bit) {
-        int startIndex = endIndex - bit;
-        return getSub(str, startIndex, endIndex);
-    }
-
-    public static String getSubFromEnd(String str, int bit) {
-        return getSubFromEnd(str, str.length(), bit);
+        return str.substring(startIndex, endIndex);
     }
 
 
     //获取子字符串，但是会判断首尾位置
+    @Deprecated
     private static String getSub(String str, int startIndex, int endIndex) {
         int length = str.length();
         if (startIndex > endIndex) {
@@ -187,15 +207,68 @@ public class StringTool {
         return num;
     }
 
-
-    public static String getColorfulStr(String str, String color) {
-        return "<font color='" + color + "'>" + str + "</font>";
+    /**************************************************
+     *
+     * 获取子字符串
+     * startIndex 为起点位置
+     * bit 为截取几位
+     *
+     **************************************************/
+    @Deprecated
+    public static String getSubFromStart(String str, int startIndex, int bit) {
+        int endIndex = startIndex + bit;
+        return getSub(str, startIndex, endIndex);
     }
 
-    public static String getColorfulStr(char str, String color) {
-        return "<font color='" + color + "'>" + str + "</font>";
+    @Deprecated
+    public static String getSubFromStart(String str, int bit) {
+        return getSubFromStart(str, 0, bit);
     }
 
+
+    public static String getSubFromStartStrictMode(String str, int startIndex, int bit) {
+        int endIndex = startIndex + bit;
+        return getSubStrictMode(str, startIndex, endIndex);
+    }
+
+    public static String getSubFromStartStrictMode(String str, int bit) {
+        return getSubFromStartStrictMode(str, 0, bit);
+    }
+
+
+    /**************************************************
+     *
+     * 获取子字符串
+     * endIndex 为终点位置
+     * bit 为截取几位
+     *
+     **************************************************/
+    @Deprecated
+    public static String getSubFromEnd(String str, int endIndex, int bit) {
+        int startIndex = endIndex - bit;
+        return getSub(str, startIndex, endIndex);
+    }
+
+    @Deprecated
+    public static String getSubFromEnd(String str, int bit) {
+        return getSubFromEnd(str, str.length(), bit);
+    }
+
+    public static String getSubFromEndStrictMode(String str, int endIndex, int bit) {
+        int startIndex = endIndex - bit;
+        return getSubStrictMode(str, startIndex, endIndex);
+    }
+
+    public static String getSubFromEndStrictMode(String str, int bit) {
+        return getSubFromEndStrictMode(str, str.length(), bit);
+    }
+
+
+    /**************************************************
+     *
+     *
+     *
+     **************************************************/
     public static boolean contains(String str, char c) {
         if (StringTool.isBlank(str)) {
             return false;
@@ -208,40 +281,73 @@ public class StringTool {
         return false;
     }
 
-    public static String getColorfulStr1(String company, String keyword, String defaultColor, String lightColor) {
-        if (isBlank(company)) {
+    /**************************************************
+     *
+     *
+     *
+     **************************************************/
+    public static String getColorfulStr(String str, String color) {
+        return "<font color='" + color + "'>" + str + "</font>";
+    }
+
+    public static String getColorfulStr(char str, String color) {
+        return "<font color='" + color + "'>" + str + "</font>";
+    }
+
+
+    @Deprecated
+    public static String getColorfulStr1(String str, String keyword, String defaultColor, String lightColor) {
+        if (isBlank(str)) {
             return null;
         }
 
         if (isBlank(keyword)) {
-            return getColorfulStr(company, defaultColor);
+            return getColorfulStr(str, defaultColor);
         }
 
         for (int i = 0; i < keyword.length(); i++) {
             char key = keyword.charAt(i);
-            if (!contains(company, key)) {
+            if (!contains(str, key)) {
                 return null;
             }
         }
-        return getColorfulStr(company, keyword, defaultColor, lightColor);
+        return getColorfulStr(str, keyword, defaultColor, lightColor);
     }
 
-    public static String getColorfulStr(String company, String keyword, String defaultColor, String lightColor) {
+    public static String getColorfulStrStrictMode(String str, String keyword, String defaultColor, String lightColor) {
+        if (isBlank(str)) {
+            return null;
+        }
+
+        if (isBlank(keyword)) {
+            return getColorfulStr(str, defaultColor);
+        }
+
+        for (int i = 0; i < keyword.length(); i++) {
+            char key = keyword.charAt(i);
+            if (!contains(str, key)) {
+                return null;
+            }
+        }
+        return getColorfulStr(str, keyword, defaultColor, lightColor);
+    }
+
+    private static String getColorfulStr(String str, String keyword, String defaultColor, String lightColor) {
         StringBuilder sb = new StringBuilder();
 
-        int length = company.length();
-        char c = company.charAt(0);
+        int length = str.length();
+        char c = str.charAt(0);
         boolean isContains = false;
         if (contains(keyword, c)) {
             isContains = true;
         }
         if (length == 1) {
-            return isContains ? getColorfulStr(company, lightColor) : getColorfulStr(company, defaultColor);
+            return isContains ? getColorfulStr(str, lightColor) : getColorfulStr(str, defaultColor);
         }
         StringBuilder sub = new StringBuilder();
         sub.append(c);
         for (int i = 1; i < length; i++) {
-            c = company.charAt(i);
+            c = str.charAt(i);
             if (contains(keyword, c)) {
                 if (!isContains) {
                     //上一个不包含
@@ -270,20 +376,6 @@ public class StringTool {
         }
 
         return sb.toString();
-    }
-
-
-    /**************************************************
-     *
-     * 切去后缀
-     *
-     **************************************************/
-    public static String cutSuffix(String str, String suffix) {
-        return str.substring(0, str.length() - suffix.length());
-    }
-
-    public static String cutSuffix(Class aClass, String suffix) {
-        return cutSuffix(aClass.getSimpleName(), suffix);
     }
 
 
