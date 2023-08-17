@@ -11,6 +11,7 @@ import cooltu.lib4j.ts.eachgetter.EachGetter;
 import cooltu.lib4j.ts.getter.Getter;
 import cooltu.lib4j.ts.getter.SameGetter;
 
+import javax.swing.plaf.synth.SynthButtonUI;
 import java.util.*;
 
 public class Ts {
@@ -421,6 +422,9 @@ public class Ts {
      **************************************************/
 
     public static <T extends Symbol> SameGetter<T> symbolSameGetter(T target) {
+        if (target == null)
+            return null;
+
         return new SameGetter<T>(target) {
             @Override
             public boolean same(Integer index, T t, T target) {
@@ -430,6 +434,9 @@ public class Ts {
     }
 
     public static <T extends Symbol> Getter<Integer, T> stringSymbolSameGetter(String symbol) {
+        if (symbol == null)
+            return null;
+
         return new Getter<Integer, T>() {
             @Override
             public boolean get(Integer integer, T t) {
@@ -439,6 +446,9 @@ public class Ts {
     }
 
     public static Getter<Integer, String> stringSameGetter(String str) {
+        if (str == null)
+            return null;
+
         return new Getter<Integer, String>() {
             @Override
             public boolean get(Integer integer, String s) {
@@ -466,7 +476,7 @@ public class Ts {
         return null;
     }
 
-    public static <T> T get(EachGetter<T> eachGetter, Getter<Integer, T> getter) {
+    public static <T> T get(Getter<Integer, T> getter, EachGetter<T> eachGetter) {
         if (eachGetter == null || getter == null)
             return null;
 
@@ -483,37 +493,15 @@ public class Ts {
 
 
     public static <T> T get(Getter<Integer, T> getter, T... ts) {
-        if (getter == null)
-            return null;
-
-        int count = CountTool.count(ts);
-        T t = null;
-        for (int i = 0; i < count; i++) {
-            t = ts[i];
-            if (getter.get(i, t)) {
-                return t;
-            }
-        }
-        return null;
+        return get(getter, tsGetter(ts));
     }
 
     public static <T> T get(Getter<Integer, T> getter, List<? extends T> ts) {
-        if (getter == null)
-            return null;
-
-        int count = CountTool.count(ts);
-        T t = null;
-        for (int i = 0; i < count; i++) {
-            t = ts.get(i);
-            if (getter.get(i, t)) {
-                return t;
-            }
-        }
-        return null;
+        return get(getter, tsGetter(ts));
     }
 
     public static <T> T get(Getter<Integer, T> getter, Set<? extends T> ts) {
-        if (CountTool.count(ts) <= 0) {
+        if (getter == null || CountTool.count(ts) <= 0) {
             return null;
         }
         Iterator<? extends T> iterator = ts.iterator();
@@ -530,84 +518,42 @@ public class Ts {
 
 
     public static String get(String symbol, String... strs) {
-        if (StringTool.isBlank(symbol))
-            return null;
-
-        int count = CountTool.count(strs);
-        String str = null;
-        for (int i = 0; i < count; i++) {
-            str = strs[i];
-            if (symbol.equals(str)) {
-                return str;
-            }
-        }
-        return null;
+        return get(stringSameGetter(symbol), tsGetter(strs));
     }
 
     public static <T extends Symbol> T get(String symbol, T... ts) {
-        if (StringTool.isBlank(symbol))
-            return null;
-
-        int count = CountTool.count(ts);
-        T t = null;
-        for (int i = 0; i < count; i++) {
-            t = ts[i];
-            if (symbol.equals(t.obtainSymbol())) {
-                return t;
-            }
-        }
-        return null;
+        return get(stringSymbolSameGetter(symbol), tsGetter(ts));
     }
 
     public static <T extends Symbol> T get(T target, T... ts) {
-        if (target == null)
-            return null;
-        return get(target.obtainSymbol(), ts);
+        return get(symbolSameGetter(target), tsGetter(ts));
     }
 
 
     public static <T extends Symbol> T get(String symbol, List<? extends T> ts) {
-        if (StringTool.isBlank(symbol))
-            return null;
-
-        int count = CountTool.count(ts);
-        T t = null;
-        for (int i = 0; i < count; i++) {
-            t = ts.get(i);
-            if (symbol.equals(t.obtainSymbol())) {
-                return t;
-            }
-        }
-        return null;
+        return get(stringSymbolSameGetter(symbol), tsGetter(ts));
     }
 
 
     public static <T extends Symbol> T get(T target, List<? extends T> ts) {
-        if (target == null)
-            return null;
-        return get(target.obtainSymbol(), ts);
+        return get(symbolSameGetter(target), tsGetter(ts));
     }
 
 
     public static <T extends Symbol> T get(String symbol, Set<? extends T> ts) {
-        if (StringTool.isBlank(symbol))
-            return null;
-
-        if (CountTool.count(ts) <= 0)
-            return null;
-
-        for (T t : ts) {
-            if (symbol.equals(t.obtainSymbol())) {
-                return t;
-            }
-        }
-        return null;
+        return get(stringSymbolSameGetter(symbol), ts);
     }
 
     public static <T extends Symbol> T get(T target, Set<? extends T> ts) {
         if (target == null)
             return null;
         return get(target.obtainSymbol(), ts);
+    }
+
+
+    @Deprecated
+    public static <T> T get(EachGetter<T> eachGetter, Getter<Integer, T> getter) {
+        return get(getter, eachGetter);
     }
 
     @Deprecated
@@ -767,7 +713,7 @@ public class Ts {
      * index
      *
      **************************************************/
-    public static <T> int index(EachGetter<T> eachGetter, Getter<Integer, T> getter) {
+    public static <T> int index(Getter<Integer, T> getter, EachGetter<T> eachGetter) {
         if (eachGetter == null || getter == null)
             return -1;
         int count = eachGetter.count();
@@ -782,91 +728,37 @@ public class Ts {
     }
 
     public static <T> int index(Getter<Integer, T> getter, T... ts) {
-        if (getter == null)
-            return -1;
-
-        int count = CountTool.count(ts);
-        T t = null;
-        for (int i = 0; i < count; i++) {
-            t = ts[i];
-            if (getter.get(i, t)) {
-                return i;
-            }
-        }
-        return -1;
+        return index(getter, tsGetter(ts));
     }
 
     public static <T> int index(Getter<Integer, T> getter, List<? extends T> ts) {
-        if (getter == null)
-            return -1;
-
-        int count = CountTool.count(ts);
-        T t = null;
-        for (int i = 0; i < count; i++) {
-            t = ts.get(i);
-            if (getter.get(i, t)) {
-                return i;
-            }
-        }
-        return -1;
+        return index(getter, tsGetter(ts));
     }
 
     public static int index(String symbol, String... strs) {
-        if (StringTool.isBlank(symbol))
-            return -1;
-
-        int count = CountTool.count(strs);
-        String str = null;
-        for (int i = 0; i < count; i++) {
-            str = strs[i];
-            if (symbol.equals(str)) {
-                return i;
-            }
-        }
-        return -1;
+        return index(stringSameGetter(symbol), tsGetter(strs));
     }
 
     public static <T extends Symbol> int index(String symbol, T... ts) {
-        if (StringTool.isBlank(symbol))
-            return -1;
-
-        int count = CountTool.count(ts);
-        T t = null;
-        for (int i = 0; i < count; i++) {
-            t = ts[i];
-            if (symbol.equals(t.obtainSymbol())) {
-                return i;
-            }
-        }
-        return -1;
+        return index(stringSymbolSameGetter(symbol), tsGetter(ts));
     }
 
     public static <T extends Symbol> int index(T target, T... ts) {
-        if (target == null)
-            return -1;
-        return index(target.obtainSymbol(), ts);
+        return index(symbolSameGetter(target), tsGetter(ts));
     }
 
 
     public static <T extends Symbol> int index(String symbol, List<? extends T> ts) {
-        if (StringTool.isBlank(symbol))
-            return -1;
-
-        int count = CountTool.count(ts);
-        T t = null;
-        for (int i = 0; i < count; i++) {
-            t = ts.get(i);
-            if (symbol.equals(t.obtainSymbol())) {
-                return i;
-            }
-        }
-        return -1;
+        return index(stringSymbolSameGetter(symbol), tsGetter(ts));
     }
 
     public static <T extends Symbol> int index(T target, List<? extends T> ts) {
-        if (target == null)
-            return -1;
-        return index(target.obtainSymbol(), ts);
+        return index(symbolSameGetter(target), tsGetter(ts));
+    }
+
+    @Deprecated
+    public static <T> int index(EachGetter<T> eachGetter, Getter<Integer, T> getter) {
+        return index(getter, eachGetter);
     }
 
     @Deprecated
@@ -935,7 +827,6 @@ public class Ts {
         replaceOrAdd(target, ts);
     }
 
-
     public static <T> void replace(SameGetter<T> getter, List<T> ts) {
         int index = index(getter, ts);
         if (index >= 0) {
@@ -952,19 +843,12 @@ public class Ts {
 
 
     public static <T extends Symbol> void replace(T target, List<T> ts) {
-        int index = index(target, ts);
-        if (index >= 0) {
-            ts.set(index, target);
-        }
-
+        replace(symbolSameGetter(target), ts);
     }
 
 
     public static <T extends Symbol> void replace(T target, T... ts) {
-        int index = index(target, ts);
-        if (index >= 0) {
-            ts[index] = target;
-        }
+        replace(symbolSameGetter(target), ts);
     }
 
     public static <T> void replaceOrAdd(SameGetter<T> getter, List<T> ts) {
