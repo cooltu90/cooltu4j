@@ -8,18 +8,6 @@ public class ConvertTool {
      * 字母大小写的操作
      *
      **************************************************/
-    public static boolean isUpper(char c) {
-        return c >= 'A' && c <= 'Z';
-    }
-
-    public static boolean isLower(char c) {
-        return c >= 'a' && c <= 'z';
-    }
-
-    public static boolean isLowerLine(char c) {
-        return c == '_';
-    }
-
     public static char toUpper(char c) {
         return (char) (c - 32);
     }
@@ -48,9 +36,9 @@ public class ConvertTool {
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < str.length(); i++) {
             char c = str.charAt(i);
-            if (isLower(c)) {
+            if (CharTool.isLower(c)) {
                 sb.append(toUpper(c));
-            } else if (isUpper(c) && i != 0) {
+            } else if (CharTool.isUpper(c) && i != 0) {
                 sb.append("_" + c);
             } else {
                 sb.append(c);
@@ -68,15 +56,15 @@ public class ConvertTool {
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < str.length(); i++) {
             char c = str.charAt(i);
-            if (i == 0 && isLower(c)) {
+            if (i == 0 && CharTool.isLower(c)) {
                 c = toUpper(c);
-            } else if (isLowerLine(c)) {
+            } else if (CharTool.isLowerLine(c)) {
                 if (i == str.length() - 1) {
                     break;
                 } else {
                     i++;
                     c = str.charAt(i);
-                    if (isLower(c)) {
+                    if (CharTool.isLower(c)) {
                         c = toUpper(c);
                     }
                 }
@@ -95,15 +83,15 @@ public class ConvertTool {
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < str.length(); i++) {
             char c = str.charAt(i);
-            if (i == 0 && isUpper(c)) {
+            if (i == 0 && CharTool.isUpper(c)) {
                 c = toLower(c);
-            } else if (isLowerLine(c)) {
+            } else if (CharTool.isLowerLine(c)) {
                 if (i == str.length() - 1) {
                     break;
                 } else {
                     i++;
                     c = str.charAt(i);
-                    if (isLower(c)) {
+                    if (CharTool.isLower(c)) {
                         c = toUpper(c);
                     }
                 }

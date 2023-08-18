@@ -922,6 +922,20 @@ public class Ts {
         return newArray;
     }
 
+    public static List<Boolean> getBooleans(int size) {
+        return getList(new EachGetter<Boolean>() {
+            @Override
+            public Boolean get(int position) {
+                return false;
+            }
+
+            @Override
+            public int count() {
+                return size;
+            }
+        });
+    }
+
     public static <T> T[] objsToArrays(Object[] objs) {
         int count = CountTool.count(objs);
         if (count > 0) {
