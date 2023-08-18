@@ -57,6 +57,10 @@ public class CountTool {
         return objs == null ? 0 : objs.length;
     }
 
+    public static int count(String str) {
+        return str == null ? 0 : str.length();
+    }
+
     /**************************************************
      *
      * isNull 判断是否为空

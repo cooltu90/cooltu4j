@@ -416,5 +416,17 @@ public class StringTool {
         return sb.toString();
     }
 
+    /**************************************************
+     *
+     * 从末尾剪掉几个
+     *
+     **************************************************/
+    public static String cutFromEnd(String str, int bit) {
+        int len = CountTool.count(str);
+        if (len <= bit) {
+            return null;
+        }
+        return str.substring(0, len - bit);
+    }
 
 }
